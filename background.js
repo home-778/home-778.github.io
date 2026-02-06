@@ -84,4 +84,4 @@ function dot(color, color2) {
     animate();
 }
 
-function dot("#ffffff", "#fafafa33") {
+dot("#ffffff", "#fafafa33")
