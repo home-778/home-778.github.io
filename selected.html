@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slected</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+</head>
+
+<body>
+<canvas class="back" id="canvas"></canvas>
+
+<div class="Bside">
+    <a href="#home" class="home"><span onclick="home()"><span class="material-symbols-outlined">home</span>Home</span></a>
+    <a href="#full" class="full" id="full"><span><span class="material-symbols-outlined">fullscreen</span>Full screen</span></a>
+</div>
+
+<div class="con noscroll">
+    <iframe class="game-iframe" id="game-area" width="480" height="800" scrolling="none" frameborder="0" allowfullscreen></iframe>
+</div>
+
+
+
+<script>
+function home() {
+    window.location.href = 'index.php';
+}
+
+document.getElementById("full").onclick = function(event) {
+    event.preventDefault();
+    var iframe = document.getElementById("game-area");
+
+    if (iframe.requestFullscreen) iframe.requestFullscreen();
+    else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
+    else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+    else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+};
+
+const params = new URLSearchParams(window.location.search);
+const gameId = params.get("game_id");
+
+if (!gameId) {
+    document.body.innerHTML += "<h2>No game selected</h2>";
+} else {
+    fetch("games.json")
+        .then(response => response.json())
+        .then(games => {
+            const game = games.find(g => g.game_id == gameId);
+
+            if (!game) {
+                document.body.innerHTML += "<h2>Game not found</h2>";
+                return;
+            }
+            document.getElementById("game-area").src = game.link;
+        })
+        .catch(err => {
+            console.error("Error loading games:", err);
+        });
+}
+</script>
+
+<script src="https://theme.house-778.org/background.js"></script>
+
+
+</body>
+</html>

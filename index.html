@@ -1,2 +1,71 @@
-<script>window.location.href = "https://house-778.org"</script>
-<a href = "https://house-778.org">Please click here if the page does not redirect automatically</a>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>777</title>
+    </head>
+    <body>
+        <canvas class="back" id="canvas"></canvas>
+        <div class="con">
+            <button style="float: right;" id="randomGameButton" onclick="selectRandomGame()">Random Select</button>
+            <input type="text" id="searchInput" placeholder="Search ...">
+            <p>All games are owned by the rightfull owners.</p>
+            
+            <div id="allGames"></div>
+        </div>
+        
+        <script>
+            fetch("games.json")
+                .then(response => response.json())
+                .then(games => {
+                const container = document.getElementById("allGames");
+                
+                games.forEach(game => {
+                    const button = document.createElement("button");
+                    button.className = "gameButton";
+                    button.textContent = game.game_name;
+                
+                    button.onclick = () => {
+                        redirectToGame(game.game_id);
+                    };
+                
+                    container.appendChild(button);
+                });
+            })
+            .catch(error => console.error("Error loading games:", error));
+            
+        
+            function redirectToGame(gameId) {
+                window.location.href = "selected.html?game_id=" + gameId;
+            }
+        
+            function applySearch() {
+                var searchValue = $('#searchInput').val().toLowerCase();
+                $('.gameButton').each(function () {
+                    var buttonText = $(this).text().toLowerCase();
+                    if (buttonText.indexOf(searchValue) > -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        
+            $('#searchInput').on('input', applySearch);
+        
+            function selectRandomGame() {
+                var games = $('.gameButton:visible');
+                if (games.length > 0) {
+                    var randomIndex = Math.floor(Math.random() * games.length);
+                    var randomGameId = $(games[randomIndex]).attr('onclick').match(/\d+/)[0];
+                    redirectToGame(randomGameId);
+                } else {
+                    alert("No games found.");
+                }
+            }
+
+        </script>
+    </body>
+</html>
+
